@@ -98,7 +98,7 @@ aws configure
 
 # Set Anthropic API key
 aws secretsmanager create-secret \
-  --name pullmint/anthropic-api-key \
+  --name <project-name>/anthropic-api-key \
   --secret-string '{"apiKey":"your-key-here"}'
 
 # Deploy infrastructure
@@ -113,13 +113,13 @@ The system auto-discovers DLQs matching the pattern `*-dlq`. Configure threshold
 ```bash
 # Enable auto-replay
 aws ssm put-parameter \
-  --name /pullmint/dlq/features/autoReplayEnabled \
+  --name /<project-name>/dlq/features/autoReplayEnabled \
   --value "true" \
   --type String
 
 # Set confidence threshold (0.0-1.0)
 aws ssm put-parameter \
-  --name /pullmint/dlq/config/confidenceThreshold \
+  --name /<project-name>/dlq/config/confidenceThreshold \
   --value "0.85" \
   --type String
 ```
@@ -130,7 +130,8 @@ aws ssm put-parameter \
 
 Access the CloudWatch dashboard:
 ```bash
-open https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=Pullmint-Self-Healing-DLQ
+# Dashboard available in AWS Console -> CloudWatch -> Dashboards
+# Look for: <project-name>-Self-Healing-DLQ
 ```
 
 ### Manual Operations
@@ -139,20 +140,20 @@ open https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:
 ```bash
 aws sqs send-message \
   --queue-url <source-queue-url> \
-  --message-body "$(aws s3 cp s3://pullmint-dlq-analysis/poison-pills/… -)"
+  --message-body "$(aws s3 cp s3://<bucket-name>/poison-pills/<message-id>.json -)"
 ```
 
 **Check classification:**
 ```bash
 aws dynamodb get-item \
-  --table-name pullmint-dlq-failure-analysis \
-  --key '{"messageId": {"S": "your-message-id"}}'
+  --table-name <table-name>-failure-analysis \
+  --key '{"messageId": {"S": "<message-id>"}}'
 ```
 
 **Disable auto-replay (emergency):**
 ```bash
 aws ssm put-parameter \
-  --name /pullmint/dlq/features/autoReplayEnabled \
+  --name /<project-name>/dlq/features/autoReplayEnabled \
   --value "false" \
   --overwrite
 ```

@@ -55,7 +55,7 @@ jobs:
         run: |
           echo "Creating backup snapshot..."
           aws dynamodb create-backup \
-            --table-name queuemint-failure-analysis-prod \
+            --table-name $(aws cloudformation describe-stacks --stack-name QueueMint-prod --query "Stacks[0].Outputs[?OutputKey=='FailureAnalysisTable'].OutputValue" --output text) \
             --backup-name "pre-deploy-$(date +%Y%m%d-%H%M%S)"
         continue-on-error: true
       
