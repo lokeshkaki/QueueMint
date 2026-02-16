@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-staging
     
     steps:
       - name: Checkout code
@@ -53,6 +52,4 @@ jobs:
         run: |
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Staging" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Dashboard: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-staging" >> $GITHUB_STEP_SUMMARY

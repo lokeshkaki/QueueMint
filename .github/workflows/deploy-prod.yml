@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-prod
     
     steps:
       - name: Validate confirmation
@@ -81,10 +80,8 @@ jobs:
         run: |
           echo "## Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Production" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- Deployed by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Dashboard: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-prod" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Rollback Instructions" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
