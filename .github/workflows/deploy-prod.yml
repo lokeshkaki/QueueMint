@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=QueueMint-prod
     
     steps:
       - name: Validate confirmation
@@ -81,10 +80,8 @@ jobs:
         run: |
           echo "## Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Production" >> $GITHUB_STEP_SUMMARY
-          echo "- Region: us-east-1" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- Deployed by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Dashboard: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=QueueMint-prod" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Rollback Instructions" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
