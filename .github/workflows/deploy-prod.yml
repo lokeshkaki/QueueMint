@@ -1,0 +1,107 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm production deployment'
+        required: true
+        default: ''
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-prod
+    
+    steps:
+      - name: Validate confirmation
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "deploy" ]; then
+            echo "Deployment not confirmed. Exiting."
+            exit 1
+          fi
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Build services
+        run: npm run build
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Create backup of current deployment
+        run: |
+          echo "Creating backup snapshot..."
+          aws dynamodb create-backup \
+            --table-name <table-name>-failure-analysis-prod \
+            --backup-name "pre-deploy-$(date +%Y%m%d-%H%M%S)"
+        continue-on-error: true
+      
+      - name: Deploy to production (canary)
+        run: |
+          cd infrastructure
+          npm run deploy:prod
+      
+      - name: Run smoke tests
+        run: npm run test:smoke -- --env=prod
+        timeout-minutes: 10
+      
+      - name: Monitor deployment health
+        run: |
+          echo "Monitoring metrics for 5 minutes..."
+          sleep 300
+          # TODO: Add metric validation script
+        timeout-minutes: 6
+      
+      - name: Post deployment summary
+        if: always()
+        run: |
+          echo "## Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: Production" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployed by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Dashboard: # Dashboard available in AWS Console -> CloudWatch -> Dashboards\n# Look for: <project-name>-Self-Healing-DLQ-prod" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Rollback Instructions" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "cd infrastructure" >> $GITHUB_STEP_SUMMARY
+          echo "git checkout <previous-commit>" >> $GITHUB_STEP_SUMMARY
+          echo "npm run deploy:prod" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Production Deployment Failed',
+              body: `Production deployment failed for commit ${context.sha}\n\nWorkflow: ${context.workflow}\nRun: ${context.runNumber}\n\nPlease investigate immediately.`,
+              labels: ['deployment', 'P0']
+            })
