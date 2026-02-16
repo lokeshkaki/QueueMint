@@ -3,9 +3,8 @@
  */
 
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { EventBridgeClient, ListRulesCommand } from '@aws-sdk/client-eventbridge';
 import type { Message } from '@aws-sdk/client-sqs';
+import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import {
   AWS_REGION,
   DYNAMODB_TABLES,
@@ -16,12 +15,12 @@ import {
   type ErrorPattern,
   type DeploymentEvent,
 } from '@queuemint/shared';
-import { logger } from './logging';
+
 import { getRetryCount } from './deduplication';
+import { logger } from './logging';
 
 const dynamoClient = new DynamoDBClient({ region: AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
-const eventBridgeClient = new EventBridgeClient({ region: AWS_REGION });
 
 /**
  * Enrich a message with contextual metadata
@@ -195,7 +194,7 @@ function truncateStackTrace(stackTrace: string | undefined): string | undefined 
  */
 function inferServiceFromQueue(queueName: string): string {
   // Remove common suffixes (case-insensitive)
-  let cleanName = queueName.replace(/-dlq$/i, '').replace(/_dlq$/i, '');
+  const cleanName = queueName.replace(/-dlq$/i, '').replace(/_dlq$/i, '');
   
   // Convert kebab-case or snake_case to PascalCase
   return cleanName
@@ -249,8 +248,6 @@ async function getRecentDeployments(): Promise<DeploymentEvent[]> {
     logger.debug('Querying recent deployments', { eventBusName: EVENT_BUS_NAME });
 
     // Placeholder: In production, query deployment events from EventBridge or DynamoDB
-    const fifteenMinutesAgo = Date.now() - 900000;
-
     // For MVP, return empty array
     // TODO: Implement in Phase 2 (Day 15-16)
     return [];

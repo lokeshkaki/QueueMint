@@ -2,9 +2,10 @@
  * Unit tests for message enrichment
  */
 
-import { mockClient } from 'aws-sdk-client-mock';
-import { DynamoDBDocumentClient, GetCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import type { Message } from '@aws-sdk/client-sqs';
+import { DynamoDBDocumentClient, GetCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
+
 import { enrichMessage, extractErrorPattern } from '../src/enrichment';
 
 const dynamoMock = mockClient(DynamoDBDocumentClient);

@@ -5,6 +5,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { AWS_REGION, DYNAMODB_TABLES } from '@queuemint/shared';
+
 import { logger } from './logging';
 import type { DeduplicationResult } from './types';
 

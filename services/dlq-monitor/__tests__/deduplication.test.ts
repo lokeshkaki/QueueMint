@@ -2,8 +2,9 @@
  * Unit tests for message deduplication
  */
 
-import { mockClient } from 'aws-sdk-client-mock';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
+
 import { checkAndRecordMessage, getRetryCount } from '../src/deduplication';
 
 const dynamoMock = mockClient(DynamoDBDocumentClient);

@@ -4,21 +4,21 @@
  */
 
 import {
+  EventBridgeClient,
+  PutEventsCommand,
+} from '@aws-sdk/client-eventbridge';
+import {
   SQSClient,
   ListQueuesCommand,
   ReceiveMessageCommand,
   DeleteMessageCommand,
-  type Message,
 } from '@aws-sdk/client-sqs';
-import {
-  EventBridgeClient,
-  PutEventsCommand,
-} from '@aws-sdk/client-eventbridge';
-import type { EventBridgeEvent } from 'aws-lambda';
 import { AWS_REGION, EVENT_BUS_NAME, type EnrichedDLQMessage } from '@queuemint/shared';
-import { logger } from './logging';
+import type { EventBridgeEvent } from 'aws-lambda';
+
 import { checkAndRecordMessage } from './deduplication';
 import { enrichMessage } from './enrichment';
+import { logger } from './logging';
 import type { DLQConfig, QueuedMessage, CloudWatchAlarmEvent } from './types';
 
 const sqsClient = new SQSClient({ region: AWS_REGION });

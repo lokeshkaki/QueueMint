@@ -2,16 +2,17 @@
  * Unit tests for DLQ Monitor Lambda
  */
 
-import { mockClient } from 'aws-sdk-client-mock';
+import { EventBridgeClient, PutEventsCommand } from '@aws-sdk/client-eventbridge';
 import {
   SQSClient,
   ListQueuesCommand,
   ReceiveMessageCommand,
   DeleteMessageCommand,
 } from '@aws-sdk/client-sqs';
-import { EventBridgeClient, PutEventsCommand } from '@aws-sdk/client-eventbridge';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import type { EventBridgeEvent } from 'aws-lambda';
+import { mockClient } from 'aws-sdk-client-mock';
+
 import { handler } from '../src/index';
 
 // Create mocks
@@ -354,7 +355,7 @@ describe('DLQ Monitor Lambda', () => {
             reason: 'Threshold crossed',
           },
         },
-      } as any;
+      } as EventBridgeEvent<'CloudWatch Alarm State Change', unknown>;
 
       await handler(alarmEvent);
 
