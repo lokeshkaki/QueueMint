@@ -26,13 +26,13 @@ const docClient = DynamoDBDocumentClient.from(dynamoClient);
  * Enrich a message with contextual metadata
  * 
  * @param message - Raw SQS message
- * @param queueUrl - Source queue URL
+ * @param _queueUrl - Source queue URL (reserved for future use)
  * @param queueName - Source queue name
  * @returns Enriched message with metadata
  */
 export async function enrichMessage(
   message: Message,
-  queueUrl: string,
+  _queueUrl: string,
   queueName: string
 ): Promise<EnrichedDLQMessage> {
   const messageId = message.MessageId || 'unknown';

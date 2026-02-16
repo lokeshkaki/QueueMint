@@ -1,5 +1,3 @@
-// TODO: Remove unused imports once implementation is complete
-// @ts-expect-error - Types will be used in implementation
 import type { EnrichedDLQMessage } from '@queuemint/shared';
 import type { EventBridgeEvent } from 'aws-lambda';
 
