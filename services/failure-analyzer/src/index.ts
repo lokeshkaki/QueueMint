@@ -1,7 +1,4 @@
-// TODO: Remove unused imports once implementation is complete
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// @ts-expect-error - Types will be used in implementation
-import type { ClassificationResult, EnrichedDLQMessage } from '@queuemint/shared';
+import type { EnrichedDLQMessage } from '@queuemint/shared';
 import type { EventBridgeEvent } from 'aws-lambda';
 
 /**
