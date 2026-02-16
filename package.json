@@ -19,10 +19,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf node_modules dist build coverage .turbo && npm run clean --workspaces",
-    "deploy": "cd infrastructure && npm run deploy",
-    "deploy:dev": "cd infrastructure && npm run deploy -- --profile dev",
-    "deploy:staging": "cd infrastructure && npm run deploy -- --profile staging",
-    "deploy:prod": "cd infrastructure && npm run deploy -- --profile prod"
+    "deploy": "cd infrastructure && npm run deploy"
   },
   "keywords": [
     "aws",
