@@ -211,8 +211,6 @@ Based on production data processing 500 messages/month:
 
 ## Documentation
 
-- [Implementation Plan](IMPLEMENTATION_PLAN.md) - Development roadmap
-- [Design Document](QueueMint-design-doc.md) - Detailed technical design
 - [Architecture](docs/ARCHITECTURE.md) - System architecture (coming soon)
 - [Runbooks](docs/RUNBOOKS.md) - Operational procedures (coming soon)
 
