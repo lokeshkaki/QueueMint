@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint code
+        run: npm run lint
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Run tests
+        run: npm test -- --coverage
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20.x'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-queuemint
+          fail_ci_if_error: false
+  
+  build:
+    name: Build Lambda packages
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build all services
+        run: npm run build
+      
+      - name: Package Lambda functions
+        run: |
+          cd services/dlq-monitor && npm run package
+          cd ../failure-analyzer && npm run package
+          cd ../action-executors && npm run package
+      
+      - name: Upload Lambda artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-packages
+          path: |
+            services/dlq-monitor/dlq-monitor.zip
+            services/failure-analyzer/failure-analyzer.zip
+            services/action-executors/action-executors.zip
+          retention-days: 7
+  
+  cdk-diff:
+    name: CDK Diff
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: CDK diff (dev)
+        run: |
+          cd infrastructure
+          npm run diff -- --context env=dev
+        continue-on-error: true

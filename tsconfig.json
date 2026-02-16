@@ -45,6 +45,7 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
+      "@queuemint/shared": ["services/shared/src"],
       "@queuemint/shared/*": ["services/shared/src/*"]
     }
   },

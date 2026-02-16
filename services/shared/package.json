@@ -1,0 +1,24 @@
+{
+  "name": "@queuemint/shared",
+  "version": "0.1.0",
+  "description": "Shared types, constants, and utilities for QueueMint",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["dlq", "sqs", "aws", "shared"],
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.478.0",
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

@@ -5,21 +5,21 @@
 /**
  * AWS configuration
  */
-export const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+export const AWS_REGION = process.env['AWS_REGION'] || 'us-east-1';
 
 /**
  * DynamoDB table names
  */
 export const DYNAMODB_TABLES = {
-  FAILURE_ANALYSIS: process.env.FAILURE_ANALYSIS_TABLE || 'pullmint-dlq-failure-analysis',
-  MESSAGE_DEDUPLICATION: process.env.DEDUP_TABLE || 'pullmint-dlq-deduplication',
+  FAILURE_ANALYSIS: process.env['FAILURE_ANALYSIS_TABLE'] || 'pullmint-dlq-failure-analysis',
+  MESSAGE_DEDUPLICATION: process.env['DEDUP_TABLE'] || 'pullmint-dlq-deduplication',
 } as const;
 
 /**
  * S3 bucket configuration
  */
 export const S3_BUCKETS = {
-  DLQ_ANALYSIS: process.env.DLQ_ANALYSIS_BUCKET || 'pullmint-dlq-analysis',
+  DLQ_ANALYSIS: process.env['DLQ_ANALYSIS_BUCKET'] || 'pullmint-dlq-analysis',
 } as const;
 
 export const S3_PREFIX = {
@@ -30,15 +30,15 @@ export const S3_PREFIX = {
 /**
  * EventBridge configuration
  */
-export const EVENT_BUS_NAME = process.env.EVENT_BUS_NAME || 'pullmint-event-bus';
+export const EVENT_BUS_NAME = process.env['EVENT_BUS_NAME'] || 'pullmint-event-bus';
 
 /**
  * SNS Topics
  */
 export const SNS_TOPICS = {
-  POISON_PILLS: process.env.SNS_POISON_PILLS || 'pullmint-dlq-poison-pills',
-  SYSTEMIC_ALERTS: process.env.SNS_SYSTEMIC_ALERTS || 'pullmint-dlq-systemic-alerts',
-  ROLLBACK_SUGGESTIONS: process.env.SNS_ROLLBACK || 'pullmint-dlq-rollback-suggestions',
+  POISON_PILLS: process.env['SNS_POISON_PILLS'] || 'pullmint-dlq-poison-pills',
+  SYSTEMIC_ALERTS: process.env['SNS_SYSTEMIC_ALERTS'] || 'pullmint-dlq-systemic-alerts',
+  ROLLBACK_SUGGESTIONS: process.env['SNS_ROLLBACK'] || 'pullmint-dlq-rollback-suggestions',
 } as const;
 
 /**
