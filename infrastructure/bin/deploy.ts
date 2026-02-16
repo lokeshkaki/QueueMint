@@ -11,8 +11,8 @@ const env = app.node.tryGetContext('env') || 'dev';
 
 new SelfHealingDLQStack(app, `QueueMint-${env}`, {
   env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION || 'us-east-1',
+    account: process.env['CDK_DEFAULT_ACCOUNT'],
+    region: process.env['CDK_DEFAULT_REGION'] || 'us-east-1',
   },
   stackName: `queuemint-self-healing-dlq-${env}`,
   description: `QueueMint Self-Healing DLQ System - ${env}`,
