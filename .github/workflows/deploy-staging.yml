@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=QueueMint-staging
     
     steps:
       - name: Checkout code
@@ -53,6 +52,4 @@ jobs:
         run: |
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Staging" >> $GITHUB_STEP_SUMMARY
-          echo "- Region: us-east-1" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Dashboard: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=QueueMint-staging" >> $GITHUB_STEP_SUMMARY
