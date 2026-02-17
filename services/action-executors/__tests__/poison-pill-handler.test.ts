@@ -121,7 +121,8 @@ describe('poison-pill-handler', () => {
       await handlePoisonPill(context);
 
       const s3Call = s3Mock.call(0);
-      const uploadedBody = JSON.parse(s3Call.args[0].input.Body as string);
+      const s3Input = s3Call.args[0].input as any;
+      const uploadedBody = JSON.parse(s3Input.Body as string);
       
       expect(uploadedBody).toHaveProperty('message');
       expect(uploadedBody).toHaveProperty('classification');
@@ -143,8 +144,9 @@ describe('poison-pill-handler', () => {
       await handlePoisonPill(context);
 
       const s3Call = s3Mock.call(0);
-      expect(s3Call.args[0].input.ContentType).toBe('application/json');
-      expect(s3Call.args[0].input.Metadata).toMatchObject({
+      const s3Input = s3Call.args[0].input as any;
+      expect(s3Input.ContentType).toBe('application/json');
+      expect(s3Input.Metadata).toMatchObject({
         'message-id': 'msg-456',
         'source-queue': 'payment-dlq',
         'classification-category': 'POISON_PILL',
@@ -164,10 +166,11 @@ describe('poison-pill-handler', () => {
       await handlePoisonPill(context);
 
       const snsCall = snsMock.call(0);
-      expect(snsCall.args[0].input.Subject).toContain('Poison Pill Detected');
-      expect(snsCall.args[0].input.Subject).toContain('payment-dlq');
+      const snsInput = snsCall.args[0].input as any;
+      expect(snsInput.Subject).toContain('Poison Pill Detected');
+      expect(snsInput.Subject).toContain('payment-dlq');
       
-      const messageBody = JSON.parse(snsCall.args[0].input.Message as string);
+      const messageBody = JSON.parse(snsInput.Message as string);
       expect(messageBody).toHaveProperty('messageId', 'msg-456');
       expect(messageBody).toHaveProperty('sourceQueue', 'payment-dlq');
       expect(messageBody).toHaveProperty('category', 'POISON_PILL');
@@ -187,7 +190,8 @@ describe('poison-pill-handler', () => {
       await handlePoisonPill(context);
 
       const snsCall = snsMock.call(0);
-      expect(snsCall.args[0].input.MessageAttributes).toMatchObject({
+      const snsInput = snsCall.args[0].input as any;
+      expect(snsInput.MessageAttributes).toMatchObject({
         'message_id': {
           DataType: 'String',
           StringValue: 'msg-456',
@@ -225,7 +229,8 @@ describe('poison-pill-handler', () => {
       await handlePoisonPill(contextLongError);
 
       const snsCall = snsMock.call(0);
-      const messageBody = JSON.parse(snsCall.args[0].input.Message as string);
+      const snsInput = snsCall.args[0].input as any;
+      const messageBody = JSON.parse(snsInput.Message as string);
       
       expect(messageBody.errorSummary.errorMessage).toHaveLength(200); // Truncated
     });

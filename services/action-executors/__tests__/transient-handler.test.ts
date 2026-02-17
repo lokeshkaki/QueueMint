@@ -152,7 +152,8 @@ describe('transient-handler', () => {
       await handleTransientFailure(context);
 
       const call = sqsMock.call(0);
-      expect(call.args[0].input.MessageAttributes).toMatchObject({
+      const input = call.args[0].input as any;
+      expect(input.MessageAttributes).toMatchObject({
         'queuemint.retryCount': {
           DataType: 'Number',
           StringValue: '2', // retryCount + 1
@@ -201,7 +202,8 @@ describe('transient-handler', () => {
       await handleTransientFailure(contextLongDelay);
 
       const call = sqsMock.call(0);
-      expect(call.args[0].input.DelaySeconds).toBe(900); // Capped at 15 minutes
+      const input = call.args[0].input as any;
+      expect(input.DelaySeconds).toBe(900); // Capped at 15 minutes
     });
   });
 });

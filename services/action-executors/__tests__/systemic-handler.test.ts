@@ -28,9 +28,11 @@ describe('systemic-handler', () => {
       similarFailuresLast1h: 25,
       recentDeployments: [
         {
-          service: 'api-service',
+          deploymentId: 'deploy-123',
           version: 'v2.3.1',
-          timestamp: Date.now() - 30000,
+          deployedAt: Date.now() - 30000,
+          committedBy: 'api-team',
+          diff_url: 'https://github.com/org/repo/compare/v2.3.0...v2.3.1',
         },
       ],
       errorPattern: {
