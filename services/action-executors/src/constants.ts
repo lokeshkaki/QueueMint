@@ -3,11 +3,11 @@
  */
 
 // Environment variables
-export const ORIGINAL_QUEUE_URL = process.env.ORIGINAL_QUEUE_URL || '';
-export const POISON_PILL_BUCKET = process.env.POISON_PILL_BUCKET || '';
-export const SNS_ALERT_TOPIC_ARN = process.env.SNS_ALERT_TOPIC_ARN || '';
-export const PAGERDUTY_INTEGRATION_KEY = process.env.PAGERDUTY_INTEGRATION_KEY || '';
-export const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+export const ORIGINAL_QUEUE_URL = process.env['ORIGINAL_QUEUE_URL'] || '';
+export const POISON_PILL_BUCKET = process.env['POISON_PILL_BUCKET'] || '';
+export const SNS_ALERT_TOPIC_ARN = process.env['SNS_ALERT_TOPIC_ARN'] || '';
+export const PAGERDUTY_INTEGRATION_KEY = process.env['PAGERDUTY_INTEGRATION_KEY'] || '';
+export const AWS_REGION = process.env['AWS_REGION'] || 'us-east-1';
 
 // Exponential backoff configuration
 export const MIN_BACKOFF_SECONDS = 30;

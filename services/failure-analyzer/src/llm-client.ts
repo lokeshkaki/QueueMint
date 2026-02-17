@@ -10,10 +10,10 @@ import { buildUserPrompt, SYSTEM_PROMPT } from './prompts';
 import type { LLMClassificationResponse } from './types';
 
 // Environment variables
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
-const LLM_MODEL = process.env.LLM_MODEL || 'claude-sonnet-4-5-20250929';
-const LLM_MAX_TOKENS = parseInt(process.env.LLM_MAX_TOKENS || '1024', 10);
-const LLM_TEMPERATURE = parseFloat(process.env.LLM_TEMPERATURE || '0.2');
+const ANTHROPIC_API_KEY = process.env['ANTHROPIC_API_KEY'] || '';
+const LLM_MODEL = process.env['LLM_MODEL'] || 'claude-sonnet-4-5-20250929';
+const LLM_MAX_TOKENS = parseInt(process.env['LLM_MAX_TOKENS'] || '1024', 10);
+const LLM_TEMPERATURE = parseFloat(process.env['LLM_TEMPERATURE'] || '0.2');
 
 /**
  * LLM client for failure classification

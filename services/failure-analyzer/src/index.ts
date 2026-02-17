@@ -16,8 +16,8 @@ import { createClassifier } from './classification';
 import { generateSemanticHash } from './semantic-hash';
 
 // Environment variables
-const FAILURE_ANALYSIS_TABLE = process.env.FAILURE_ANALYSIS_TABLE || '';
-const EVENT_BUS_NAME = process.env.EVENT_BUS_NAME || '';
+const FAILURE_ANALYSIS_TABLE = process.env['FAILURE_ANALYSIS_TABLE'] || '';
+const EVENT_BUS_NAME = process.env['EVENT_BUS_NAME'] || '';
 
 // AWS SDK clients (singleton)
 let ddbDocClient: DynamoDBDocumentClient;

@@ -17,10 +17,10 @@ import { generateSemanticHash } from './semantic-hash';
 import type { HeuristicResult } from './types';
 
 // Environment variables
-const FAILURE_ANALYSIS_TABLE = process.env.FAILURE_ANALYSIS_TABLE || '';
-const CONFIDENCE_THRESHOLD = parseFloat(process.env.CONFIDENCE_THRESHOLD || '0.85');
-const CACHE_TTL_HOURS = parseInt(process.env.CACHE_TTL_HOURS || '1', 10);
-const SYSTEMIC_THRESHOLD = parseInt(process.env.SYSTEMIC_THRESHOLD || '10', 10);
+const FAILURE_ANALYSIS_TABLE = process.env['FAILURE_ANALYSIS_TABLE'] || '';
+const CONFIDENCE_THRESHOLD = parseFloat(process.env['CONFIDENCE_THRESHOLD'] || '0.85');
+const CACHE_TTL_HOURS = parseInt(process.env['CACHE_TTL_HOURS'] || '1', 10);
+const SYSTEMIC_THRESHOLD = parseInt(process.env['SYSTEMIC_THRESHOLD'] || '10', 10);
 
 // DynamoDB client (singleton)
 let ddbDocClient: DynamoDBDocumentClient;
@@ -127,7 +127,7 @@ export class FailureClassifier {
           message.enrichment.retryCount
         ),
         metadata: {
-          llmModel: process.env.LLM_MODEL || 'claude-sonnet-4-5-20250929',
+          llmModel: process.env['LLM_MODEL'] || 'claude-sonnet-4-5-20250929',
           tokens: {
             input: llmResult.inputTokens,
             output: llmResult.outputTokens,
@@ -225,7 +225,7 @@ export class FailureClassifier {
       }
       
       // Check if cache entry is still valid (within TTL)
-      const cachedAt = result.Item.metadata?.cachedAt || 0;
+      const cachedAt = result.Item['metadata']?.cachedAt || 0;
       const now = Date.now();
       const cacheAgeHours = (now - cachedAt) / (1000 * 60 * 60);
       
